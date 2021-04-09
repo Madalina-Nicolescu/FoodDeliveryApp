@@ -9,8 +9,7 @@ Proiectul contine urmatoarele clase:
                       -giveFeedback = un utilizator poate da un rating restaurantului  
                       -addToFav = utilizatorul poate adauga restaurantul la lista de favorite  
                        
-3.Cart: metode: -displayCart = afisarea produselor din cos impreuna cu pretul total. Utilizatorul  
-                                este intrebat daca doreste sa efectueze comanda sau daca doreste sa aplice un voucher la comanda  
+3.Cart: metode: -displayCart = afisarea produselor din cos impreuna cu pretul total. Utilizatorul este intrebat daca doreste sa efectueze comanda sau daca doreste sa aplice un voucher la comanda  
 4.Item  
 5.Menu  
 6.Voucher  
@@ -18,6 +17,7 @@ Proiectul contine urmatoarele clase:
 8.Employee  
 9.Driver  
 10.Manager  
+
 
 Clasa de serviciu contine urmatoarele metode:  
 1.welcome = afisarea unui mesaj initial pentru utilizator  
@@ -27,6 +27,8 @@ Clasa de serviciu contine urmatoarele metode:
 5.updateProfile = utilizatorul are optiunea sa isi editeze informatiile din profil  
 6.displayRestaurant = afisarea listei cu toate restaurantele  
 7.searchRestaurant = cautarea unui restaurant dupa nume in lista de restaurante  
+
+
 
 Accesand aplicatia, utilizatorul are diferite posibilitati:  
 -crearea unui cont  
