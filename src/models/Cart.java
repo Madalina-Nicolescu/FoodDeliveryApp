@@ -34,7 +34,7 @@ public class Cart {
         this.price = price;
     }
 
-    public int displayCart(Order order, int cont, TreeSet<Voucher> vouchers)
+    public int displayCart(Order order, int cont, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
     {
         System.out.println("Items:");
         for(int i = 0; i < this.getItems().size(); i++)
@@ -74,6 +74,14 @@ public class Cart {
                         System.out.println("The voucher could not be found");
                     }
                 }
+                Manager man = new Manager("",0,"");
+                for(Manager m : managers)
+                {
+                    if(m.getRestaurant().getName().equals(order.getRestaurant().getName()))
+                    {
+                        man = m;
+                    }
+                }
                 cont = 0;
                 for (int i = 0; i < 50; ++i) System.out.println();
                 order.setMenu(this.getItems());
@@ -81,13 +89,16 @@ public class Cart {
                 System.out.println("Items:");
                 for(int i = 0; i < this.getItems().size(); i++)
                 {
-                    System.out.println("\n");
                     System.out.println((i+1) +". " + this.getItems().get(i).getName() +" -> " + this.getItems().get(i).getPrice());
                 }
                 System.out.println("\n-------------------");
                 System.out.println("Total price: " + this.getPrice());
-                System.out.println("\n\n");
-                System.out.println("Restaurant: " + order.getRestaurant().getName());
+                System.out.println("\n");
+                System.out.println("Restaurant: " + order.getRestaurant().getName() + "; Manager: " + man.getName() );
+                System.out.println("\nYour order will be delivered by " + drivers.peek().getName());
+                System.out.println("You can contact him at " + drivers.peek().getPhone());
+                Employee d = drivers.remove();
+                drivers.add(d);
 
                 this.price=0;
                 this.items.clear();

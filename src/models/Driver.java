@@ -4,8 +4,9 @@ public class Driver extends Employee  {
     private String carModel;
     private String licensePlate;
 
-    public Driver(String name, Restaurant restaurant, int salary,String carModel, String licensePlate) {
-        super(name,restaurant,salary);
+
+    public Driver(String name, int salary,String phone,String carModel, String licensePlate) {
+        super(name,salary,phone);
         this.carModel = carModel;
         this.licensePlate = licensePlate;
     }

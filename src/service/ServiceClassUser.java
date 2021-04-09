@@ -108,7 +108,7 @@ public class ServiceClassUser {
         return user;
     }
 
-    public void displayRestaurants(List<Restaurant> restaurants, User user, TreeSet<Voucher> vouchers)
+    public void displayRestaurants(List<Restaurant> restaurants, User user, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
     {
         for(int i = 0; i< restaurants.size(); i++)
         {
@@ -122,13 +122,13 @@ public class ServiceClassUser {
         Scanner input = new Scanner(System.in);
         String option = input.nextLine();
         int i =  Integer.parseInt(option);
-        restaurants.get(i-1).displayRestaurant(user, this.order, vouchers);
+        restaurants.get(i-1).displayRestaurant(user, this.order, vouchers,drivers, managers);
 
     }
 
 
 
-    public void searchRestaurant(String search, List<Restaurant> restaurants, User user, TreeSet<Voucher> vouchers)
+    public void searchRestaurant(String search, List<Restaurant> restaurants, User user, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
     {
         int j = 0;
         List<Restaurant> searchResults = new ArrayList<Restaurant>();
@@ -159,13 +159,13 @@ public class ServiceClassUser {
             String option = input.nextLine();
             int i = Integer.parseInt(option);
 
-            searchResults.get(i-1).displayRestaurant(user, this.order, vouchers);
+            searchResults.get(i-1).displayRestaurant(user, this.order, vouchers,drivers, managers);
 
         }
         else
         {
             Restaurant restaurant = searchResults.get(0);
-            restaurant.displayRestaurant(user, this.order, vouchers);
+            restaurant.displayRestaurant(user, this.order, vouchers, drivers,managers);
         }
     }
 }

@@ -2,14 +2,17 @@ package models;
 
 public class Employee {
     protected String name;
-    protected Restaurant restaurant;
     protected int salary;
+    protected String phone;
 
 
-    public Employee(String name, Restaurant restaurant, int salary) {
+    public Employee() {
+    }
+
+    public Employee(String name, int salary, String phone) {
         this.name = name;
-        this.restaurant = restaurant;
         this.salary = salary;
+        this.phone = phone;
     }
 
     public String getName() {
@@ -20,13 +23,6 @@ public class Employee {
         this.name = name;
     }
 
-    public Restaurant getRestaurant() {
-        return restaurant;
-    }
-
-    public void setRestaurant(Restaurant restaurant) {
-        this.restaurant = restaurant;
-    }
 
     public int getSalary() {
         return salary;
@@ -34,5 +30,13 @@ public class Employee {
 
     public void setSalary(int salary) {
         this.salary = salary;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 }

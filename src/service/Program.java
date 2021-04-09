@@ -4,6 +4,7 @@ import models.*;
 import service.ServiceClassUser;
 
 import javax.xml.ws.Service;
+import java.io.FileReader;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -116,6 +117,30 @@ public class Program {
         vouchers.add(v2);
         vouchers.add(v3);
 
+        Queue<Employee> drivers = new LinkedList<Employee>();
+        Employee e1 = new Driver("Dumitru Ionel",800,"0789678567","Opel", "B07DUM");
+        Employee e2 = new Driver("Popescu Andrei", 800, "0765345234", "Skoda", "TM98POP");
+        Employee e3 = new Driver("Ionescu Marius", 700, "07432321432", "Dacia","B78ION");
+        Employee e4 = new Driver("Vasile Sorin", 700, "0789678555", "Toyota", "B76VAS");
+        drivers.add(e1);
+        drivers.add(e2);
+        drivers.add(e3);
+        drivers.add(e4);
+
+        List<Manager> managers = new ArrayList<Manager>();
+        Manager e5 = new Manager("Virgil Dumitru", 5000, "0789675123", r1);
+        Manager e6 = new Manager("Nicolae Daniel", 4000, "0789675763", r2);
+        Manager e7 = new Manager("Daniel David", 3000, "0789675111", r3);
+        Manager e8 = new Manager("Ion Mircea", 3000, "0789675555", r4);
+        Manager e9 = new Manager("Marcu Florin", 4000, "0789675876", r5);
+        Manager e10 = new Manager("Pavel Alexandru", 8000, "0789432123", r6);
+        managers.add(e5);
+        managers.add(e6);
+        managers.add(e7);
+        managers.add(e8);
+        managers.add(e9);
+        managers.add(e10);
+
         Scanner input = new Scanner(System.in);
         ServiceClassUser service = new ServiceClassUser();
 
@@ -141,15 +166,15 @@ public class Program {
                     service.updateProfile(user);
                     break;
                 case "3":
-                    service.displayRestaurants(restaurants, user, vouchers);
+                    service.displayRestaurants(restaurants, user, vouchers,drivers,managers);
                     break;
                 case "4":
-                    cont = user.getCart().displayCart(service.getOrder(),cont, vouchers);
+                    cont = user.getCart().displayCart(service.getOrder(),cont, vouchers,drivers, managers);
                     break;
                 case "5":
                     System.out.println("Search:");
                     String search = input.nextLine();
-                    service.searchRestaurant(search, restaurants, user, vouchers);
+                    service.searchRestaurant(search, restaurants, user, vouchers,drivers,managers);
                     break;
                 default:
                     cont = 1;

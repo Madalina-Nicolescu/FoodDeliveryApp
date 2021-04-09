@@ -1,9 +1,6 @@
 package models;
 
-import java.util.List;
-import java.util.Locale;
-import java.util.Scanner;
-import java.util.TreeSet;
+import java.util.*;
 
 public class Restaurant {
     private String name;
@@ -96,7 +93,7 @@ public class Restaurant {
         System.out.println("\n");
     }
 
-    public void displayRestaurant(User user, Order order, TreeSet<Voucher> vouchers)
+    public void displayRestaurant(User user, Order order, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
     {
         System.out.println(this.name);
         System.out.println("Rating: " + this.rating + "/5");
@@ -113,7 +110,7 @@ public class Restaurant {
         {
             case "1":
                 this.seeMenu();
-                this.addToCart(user,menu,order,vouchers);
+                this.addToCart(user,menu,order,vouchers,drivers, managers);
                 break;
             case "2":
                 this.giveFeedback();
@@ -130,7 +127,11 @@ public class Restaurant {
 
     public void addToFav(User user)
     {
-        user.getFavorites().add(this);
+        if(!user.getFavorites().contains(this))
+        {
+            user.getFavorites().add(this);
+        }
+
     }
 
     public void giveFeedback()
@@ -147,7 +148,7 @@ public class Restaurant {
 
     }
 
-    public void addToCart(User user, Menu menu, Order order, TreeSet<Voucher> vouchers)
+    public void addToCart(User user, Menu menu, Order order, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
     {
         int cont = 1;
         while(cont == 1)
@@ -181,7 +182,7 @@ public class Restaurant {
                     order.setRestaurant(this);
                     break;
                 case "2":
-                    cont = user.getCart().displayCart(order, cont, vouchers);
+                    cont = user.getCart().displayCart(order, cont, vouchers,drivers, managers);
                     break;
                 default:
                     cont = 0;
