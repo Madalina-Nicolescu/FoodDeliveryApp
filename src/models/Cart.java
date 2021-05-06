@@ -1,6 +1,8 @@
 package models;
 
+import audit.Audit;
 import service.ServiceClassUser;
+
 
 import java.util.*;
 
@@ -34,7 +36,7 @@ public class Cart {
         this.price = price;
     }
 
-    public int displayCart(Order order, int cont, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
+    public int displayCart(Order order, int cont, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers, Audit audit)
     {
         System.out.println("Items:");
         for(int i = 0; i < this.getItems().size(); i++)
@@ -66,7 +68,9 @@ public class Cart {
                             double newPrice = this.getPrice()-this.getPrice()*voucher.getDiscount()/100;
                             this.setPrice(newPrice);
                             v++;
+                            audit.write("Apply Voucher");
                             break;
+
                         }
                     }
                     if(v==0)
@@ -99,7 +103,7 @@ public class Cart {
                 System.out.println("You can contact him at " + drivers.peek().getPhone());
                 Employee d = drivers.remove();
                 drivers.add(d);
-
+                audit.write("Finish Order");
                 this.price=0;
                 this.items.clear();
 

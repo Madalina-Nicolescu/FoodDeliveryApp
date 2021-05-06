@@ -1,5 +1,7 @@
 package models;
 
+import audit.Audit;
+
 import java.util.*;
 
 public class Restaurant {
@@ -93,7 +95,7 @@ public class Restaurant {
         System.out.println("\n");
     }
 
-    public void displayRestaurant(User user, Order order, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
+    public void displayRestaurant(User user, Order order, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers, Audit audit)
     {
         System.out.println(this.name);
         System.out.println("Rating: " + this.rating + "/5");
@@ -110,13 +112,16 @@ public class Restaurant {
         {
             case "1":
                 this.seeMenu();
-                this.addToCart(user,menu,order,vouchers,drivers, managers);
+                audit.write("See " + this.name + " Menu");
+                this.addToCart(user,menu,order,vouchers,drivers, managers, audit);
                 break;
             case "2":
                 this.giveFeedback();
+                audit.write("Add Rating to " + this.name);
                 break;
             case "3":
                 this.addToFav(user);
+                audit.write("Add " + this.name + "to Favourites");
                 break;
             default:
                 System.out.println("Back to main menu");
@@ -148,7 +153,7 @@ public class Restaurant {
 
     }
 
-    public void addToCart(User user, Menu menu, Order order, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
+    public void addToCart(User user, Menu menu, Order order, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers, Audit audit)
     {
         int cont = 1;
         while(cont == 1)
@@ -179,10 +184,12 @@ public class Restaurant {
                             user.getCart().setPrice(user.getCart().getPrice()+menu.getDrinksMenu().get(i).getPrice());
                         }
                     }
+                    audit.write("Add Item to Order");
                     order.setRestaurant(this);
                     break;
                 case "2":
-                    cont = user.getCart().displayCart(order, cont, vouchers,drivers, managers);
+                    cont = user.getCart().displayCart(order, cont, vouchers,drivers, managers, audit);
+                    audit.write("View Cart");
                     break;
                 default:
                     cont = 0;
