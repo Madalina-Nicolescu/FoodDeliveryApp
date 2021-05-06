@@ -25,7 +25,7 @@ Clasa de serviciu contine urmatoarele metode:
 3.chooseAction = afisarea unui meniu de actiuni disponibile pentru utilizator  
 4.seeProfile = vizualizarea informatiilor din profilul utilizatorului  
 5.updateProfile = utilizatorul are optiunea sa isi editeze informatiile din profil  
-6.displayRestaurant = afisarea listei cu toate restaurantele  
+6.displayRestaurants = afisarea listei cu toate restaurantele  
 7.searchRestaurant = cautarea unui restaurant dupa nume in lista de restaurante  
 
 
