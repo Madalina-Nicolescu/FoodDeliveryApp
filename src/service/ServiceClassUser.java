@@ -4,6 +4,7 @@ import audit.Audit;
 import audit.CSV;
 import models.*;
 
+import java.sql.SQLException;
 import java.util.*;
 class cmpVouchers implements Comparator<Voucher> {
     @Override
@@ -14,14 +15,19 @@ class cmpVouchers implements Comparator<Voucher> {
 
 public class ServiceClassUser {
     private Order order;
-    private TreeSet<Voucher> vouchers = new TreeSet<Voucher>(new cmpVouchers());
-    private Queue<Employee> drivers = new LinkedList<Employee>();
-    private List<Manager> managers = new ArrayList<Manager>();
-    private List<Restaurant> restaurants = new ArrayList<Restaurant>();
+    private TreeSet<Voucher> vouchers;
+    private Queue<Driver> drivers;
+    private List<Manager> managers;
+    private List<Restaurant> restaurants;
     private static CSV csv = CSV.getInstance();
 
-    public ServiceClassUser() {
-        this.order = new Order();
+    public ServiceClassUser() throws SQLException {
+        order = new Order(Order.getCrt());
+        vouchers = new TreeSet<Voucher>(new cmpVouchers());
+        drivers = new LinkedList<Driver>();
+        managers = new ArrayList<Manager>();
+        restaurants = DatabaseConnection.getInstance().readRestaurants();
+
     }
 
     public Order getOrder() {
@@ -44,7 +50,6 @@ public class ServiceClassUser {
             String[] voucher = line.split(", ");
             String code = voucher[0];
             int discount = Integer.parseInt(voucher[1]);
-
             Voucher v = new Voucher(code,discount);
             vouchers.add(v);
         }
@@ -70,6 +75,24 @@ public class ServiceClassUser {
 
     }
 
+    public String showDrivers()
+    {
+        String inf = "";
+        for(Driver driver:drivers)
+        {
+            inf+="\n\n\t\tName: " + driver.getName();
+            inf+="\n\t\tSalary: " + String.valueOf(driver.getSalary());
+            inf+="\n\t\tPhone Number: " + driver.getPhone();
+            inf+= "\n\t\tCar: " + driver.getCarModel();
+            inf+="\n\t\tLicense Plate: " + driver.getLicensePlate();
+            inf+="\n\t------------------------------------------------------------------------";
+        }
+
+
+        return inf;
+
+    }
+
     public void readManagers()
     {
         for(String line : csv.read("managers.csv"))
@@ -80,12 +103,12 @@ public class ServiceClassUser {
             int salary = Integer.parseInt(manager[1]);
             String phone = manager[2];
             String restName = manager[3];
-            Restaurant r = null;
+            Restaurant r = new Restaurant();
             for(Restaurant restaurant : restaurants)
             {
                 if(restaurant.getName().equalsIgnoreCase(restName))
                 {
-                    r = restaurant;
+                    r = new Restaurant(restaurant.getName(),restaurant.getRating(), restaurant.getNoRating(),restaurant.getAddress(),restaurant.getProgram());
                 }
             }
 
@@ -94,7 +117,7 @@ public class ServiceClassUser {
         }
 
     }
-
+/*
     public void readRestaurants(List<Menu> menus)
     {
         int i = 0;
@@ -114,9 +137,10 @@ public class ServiceClassUser {
             restaurants.add(r);
         }
 
-    }
+    }*/
 
     public TreeSet<Voucher> getVouchers() {
+
         return vouchers;
     }
 
@@ -124,11 +148,11 @@ public class ServiceClassUser {
         this.vouchers = vouchers;
     }
 
-    public Queue<Employee> getDrivers() {
+    public Queue<Driver> getDrivers() {
         return drivers;
     }
 
-    public void setDrivers(Queue<Employee> drivers) {
+    public void setDrivers(Queue<Driver> drivers) {
         this.drivers = drivers;
     }
 
@@ -150,8 +174,11 @@ public class ServiceClassUser {
 
     public User createAccount()
     {
+
         System.out.println("\nFirst, let's create an account! ");
         User user = new User();
+        Cart cart= new Cart(Cart.getCrt());
+        user.setCart(cart);
         user.initialize();
         return user;
     }
@@ -236,8 +263,7 @@ public class ServiceClassUser {
         return user;
     }
 
-    public void displayRestaurants(List<Restaurant> restaurants, User user, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
-    {
+    public void displayRestaurants(List<Restaurant> restaurants, User user, TreeSet<Voucher> vouchers, Queue<Driver> drivers, List<Manager> managers) throws SQLException {
         for(int i = 0; i< restaurants.size(); i++)
         {
             System.out.println("\n-------------------");
@@ -256,8 +282,7 @@ public class ServiceClassUser {
 
 
 
-    public void searchRestaurant(String search, List<Restaurant> restaurants, User user, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers)
-    {
+    public void searchRestaurant(String search, List<Restaurant> restaurants, User user, TreeSet<Voucher> vouchers, Queue<Driver> drivers, List<Manager> managers) throws SQLException {
         int j = 0;
         List<Restaurant> searchResults = new ArrayList<Restaurant>();
         for(int i = 0; i < restaurants.size(); i++)

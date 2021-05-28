@@ -1,23 +1,47 @@
 package models;
 
+
+
+
 import audit.Audit;
-import service.ServiceClassUser;
 
-
+import java.net.PortUnreachableException;
 import java.util.*;
 
 public class Cart {
+    private static int crt;
+    private int id;
     private List<Item> items;
     private double price;
 
-    public Cart() {
-        this.items = new ArrayList<Item>();
+    public Cart(int id) {
+        this.id = id;
+        this.items = new ArrayList<>();
         this.price = 0;
+        crt++;
     }
 
-    public Cart(List<Item> items, double price) {
+    public Cart(int id, List<Item> items, double price) {
+        this.id =id;
         this.items = items;
         this.price = price;
+        crt++;
+    }
+
+    public static int getCrt() {
+        return crt;
+    }
+
+    public static void setCrt(int crt) {
+        Cart.crt = crt;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public List<Item> getItems() {
@@ -28,7 +52,7 @@ public class Cart {
         this.items = items;
     }
 
-    public double getPrice() {
+    public Double getPrice() {
         return price;
     }
 
@@ -36,7 +60,20 @@ public class Cart {
         this.price = price;
     }
 
-    public int displayCart(Order order, int cont, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers, Audit audit)
+    public String showCart()
+    {
+        String inf = "";
+        for(int i = 0; i < this.getItems().size(); i++)
+        {
+            inf+="\n";
+            inf= inf+ String.valueOf(i+1) +". " + this.getItems().get(i).getName() +" -> " + this.getItems().get(i).getPrice();
+        }
+        inf+=("\n\n-------------------");
+        inf=inf+ "Total price: " + this.getPrice();
+        return inf;
+    }
+
+    public int displayCart(Order order, int cont, TreeSet<Voucher> vouchers, Queue<Driver> drivers, List<Manager> managers, Audit audit)
     {
         System.out.println("Items:");
         for(int i = 0; i < this.getItems().size(); i++)
@@ -101,7 +138,7 @@ public class Cart {
                 System.out.println("Restaurant: " + order.getRestaurant().getName() + "; Manager: " + man.getName() );
                 System.out.println("\nYour order will be delivered by " + drivers.peek().getName());
                 System.out.println("You can contact him at " + drivers.peek().getPhone());
-                Employee d = drivers.remove();
+                Driver d = drivers.remove();
                 drivers.add(d);
                 audit.write("Finish Order");
                 this.price=0;

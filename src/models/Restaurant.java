@@ -1,10 +1,14 @@
 package models;
 
 import audit.Audit;
+import service.DatabaseConnection;
 
+import java.sql.SQLException;
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Restaurant {
+    private int id;
     private String name;
     private double rating;
     private int noRating;
@@ -12,7 +16,8 @@ public class Restaurant {
     private String program;
     private Menu menu;
 
-    public Restaurant(String name, double rating, int noRating, String address, String program) {
+    public Restaurant(String name, double rating, int noRating, String address, String program)
+    {
         this.name = name;
         this.rating = rating;
         this.noRating = noRating;
@@ -20,13 +25,45 @@ public class Restaurant {
         this.program = program;
     }
 
-    public Restaurant(String name, double rating,int noRating, String address, String program, Menu menu) {
+    public Restaurant(int id, String name, double rating, int noRating, String address, String program) {
+        this.id =id;
+        this.name = name;
+        this.rating = rating;
+        this.noRating = noRating;
+        this.address = address;
+        this.program = program;
+    }
+
+    public Restaurant(int id, String name, double rating,int noRating, String address, String program, Menu menu) {
+        this.id = id;
         this.name = name;
         this.rating = rating;
         this.noRating = noRating;
         this.address = address;
         this.program = program;
         this.menu = menu;
+    }
+
+    public Restaurant(int id, String name, double rating,int noRating, String address, String program, int idmenu) {
+        this.id = id;
+        this.name = name;
+        this.rating = rating;
+        this.noRating = noRating;
+        this.address = address;
+        this.program = program;
+        this.menu = new Menu(idmenu);
+    }
+
+    public Restaurant() {
+
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public int getNoRating() {
@@ -77,6 +114,51 @@ public class Restaurant {
         this.program = program;
     }
 
+    public String showRestaurant()
+    {
+        String information = "";
+        information+="\t\t\t";
+        information+=name.toUpperCase(Locale.ROOT);
+        information += "\n\t\t\tRating: ";
+        DecimalFormat df = new DecimalFormat("#.#####");
+        information +=df.format(this.rating);
+        information += "/5";
+        information += "\n\t\t\tAddress: ";
+        information += this.address;
+        information += "\n\t\t\tOpen: ";
+        information += this.program;
+        information += "\n\t\t----------------------------------------------------------------------------------------------------------";
+
+        return information;
+    }
+
+    public String showFoodMenu() throws SQLException {
+        Menu menu = DatabaseConnection.getInstance().getMenu(this.id);
+        String inf = "        FOOD\n";
+        for(int i = 0; i <menu.getFoodMenu().size();i++)
+        {
+            inf = inf +"\n" + menu.getFoodMenu().get(i).getName() + ".............." + menu.getFoodMenu().get(i).getPrice();
+
+        }
+        inf+="\n\n";
+        return inf;
+
+    }
+
+    public String showDrinksMenu() throws SQLException {
+        Menu menu = DatabaseConnection.getInstance().getMenu(this.id);
+        String inf = "        DRINKS\n";
+        for(int i = 0; i <menu.getDrinksMenu().size();i++)
+        {
+            inf = inf +"\n" + menu.getDrinksMenu().get(i).getName() + ".............." + menu.getDrinksMenu().get(i).getPrice();
+
+        }
+        inf+="\n\n";
+        return inf;
+
+    }
+
+
     public void seeMenu()
     {
         System.out.println("\nFood Menu");
@@ -95,8 +177,7 @@ public class Restaurant {
         System.out.println("\n");
     }
 
-    public void displayRestaurant(User user, Order order, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers, Audit audit)
-    {
+    public void displayRestaurant(User user, Order order, TreeSet<Voucher> vouchers, Queue<Driver> drivers, List<Manager> managers, Audit audit) throws SQLException {
         System.out.println(this.name);
         System.out.println("Rating: " + this.rating + "/5");
         System.out.println("Address: " + this.address);
@@ -111,6 +192,8 @@ public class Restaurant {
         switch (option)
         {
             case "1":
+                Menu menu = DatabaseConnection.getInstance().getMenu(this.id);
+                this.setMenu(menu);
                 this.seeMenu();
                 audit.write("See " + this.name + " Menu");
                 this.addToCart(user,menu,order,vouchers,drivers, managers, audit);
@@ -153,7 +236,7 @@ public class Restaurant {
 
     }
 
-    public void addToCart(User user, Menu menu, Order order, TreeSet<Voucher> vouchers, Queue<Employee> drivers, List<Manager> managers, Audit audit)
+    public void addToCart(User user, Menu menu, Order order, TreeSet<Voucher> vouchers, Queue<Driver> drivers, List<Manager> managers, Audit audit)
     {
         int cont = 1;
         while(cont == 1)

@@ -32,7 +32,7 @@ public class Audit {
         try(FileWriter writer = new FileWriter(new File("data/actions.csv"), Boolean.TRUE)) {
             Date date = new Date();
             SimpleDateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-            writer.write(String.format("%s, %s\n", action, formatter.format(date)));
+            writer.write(String.format("%s, %s, %s\n", action, formatter.format(date), Thread.currentThread().getName()));
         } catch (IOException e){
             System.out.println("The 'actions.csv' file couldn't be open.");
         }

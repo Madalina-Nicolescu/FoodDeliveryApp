@@ -1,29 +1,62 @@
 package models;
 
+import service.DatabaseConnection;
+
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class User {
+    private static int crt;
+    private int id;
     private String name;
     private String address;
     private String email;
     private String phoneNumber;
     private Cart cart;
+    private String role;
     private List<Restaurant> favorites;
 
     public User() {
-        this.cart = new Cart();
+        crt++;
         this.favorites = new ArrayList<Restaurant>();
     }
 
-    public User(String name, String address, String email, String phoneNumber) {
+    public User(int id, String name, String address, String email, String phoneNumber, String role, int idCart) throws SQLException {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.email = email;
         this.phoneNumber = phoneNumber;
-        this.cart = new Cart();
+        this.role = role;
         this.favorites = new ArrayList<Restaurant>();
+        this.cart= DatabaseConnection.getInstance().getDBCart(id);
+        crt++;
+    }
+
+    public static int getCrt() {
+        return crt;
+    }
+
+    public static void setCrt(int crt) {
+        User.crt = crt;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public List<Restaurant> getFavorites() {
