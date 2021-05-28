@@ -1,5 +1,6 @@
 package service;
 
+import audit.Audit;
 import models.*;
 
 import javax.xml.transform.Result;
@@ -47,6 +48,8 @@ public class DatabaseConnection {
     //-----------------------------------CREATE OPERATIONS---------------------------------
 
     public User createUser( int id,String name, String address, String email, String phoneNumber, String role, int idCart ) throws SQLException {
+        Audit audit=Audit.getInstance();
+        audit.write("Create User");
         User user = new User(id,name,address, email, phoneNumber,role, idCart);
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO USER VALUES(?,?,?,?,?,?,?)");
         stmt.setString(1, String.valueOf(id));
@@ -76,6 +79,8 @@ public class DatabaseConnection {
     }
 
     public Cart createCart() throws SQLException {
+        Audit audit=Audit.getInstance();
+        audit.write("Create Cart");
 
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO cart(price) VALUES(?)");
         Cart cart = new Cart(getLastCartId());
@@ -87,6 +92,8 @@ public class DatabaseConnection {
     }
 
     public Boolean addItemToCart(int idcart, int iditem) throws SQLException {
+        Audit audit=Audit.getInstance();
+        audit.write("Create Item_Cart");
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO cart_item(iditem,idcart) VALUES(?,?)");
         stmt.setString(1, String.valueOf(iditem));
         stmt.setString(2,String.valueOf(idcart));
@@ -112,6 +119,8 @@ public class DatabaseConnection {
     }
 
     public Order createOrder(int id, int idUser, float price,int idRestaurant ) throws SQLException {
+        Audit audit=Audit.getInstance();
+        audit.write("Create Order");
         Order order = new Order(id);
         PreparedStatement stmt = connection.prepareStatement("INSERT INTO order VALUES(?,?,?,?)");
         stmt.setString(1, String.valueOf(id));
@@ -264,6 +273,8 @@ public class DatabaseConnection {
     }
 
     public User getUserbyEmail(String email) throws SQLException{
+        Audit audit=Audit.getInstance();
+        audit.write("Get User By Email");
         User user = null;
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM user WHERE email = ?");
         statement.setString(1, email);
@@ -278,6 +289,8 @@ public class DatabaseConnection {
 
 
     public List<Restaurant> readRestaurants() throws SQLException{
+        Audit audit=Audit.getInstance();
+        audit.write("Read Restaurants");
         List<Restaurant> restaurants = new ArrayList<>();
         PreparedStatement statement = connection.prepareStatement("SELECT * FROM restaurants");
         ResultSet results = statement.executeQuery();
@@ -303,6 +316,8 @@ public class DatabaseConnection {
 
     public Menu getMenu(int restaurant_id) throws SQLException
     {
+        Audit audit=Audit.getInstance();
+        audit.write("Read Menu");
         Menu menu = null;
         PreparedStatement statement = connection.prepareStatement("SELECT menu.idmenu FROM menu JOIN restaurants ON (menu.idmenu = restaurants.idmenu) WHERE idrestaurants = ? ");
         statement.setString(1, String.valueOf(restaurant_id));
